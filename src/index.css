@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@plugin "daisyui";
+
+/* Fonts */
+html,
+body {
+  font-family: 'Exo', sans-serif;
+  height: 220px;
+  min-width: 420px;
+  padding: 0.5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Public Sans', sans-serif;
+}
+
+/* Customize */
+@utility btn {
+  @apply btn-secondary;
+  @apply btn-outline;
+  @apply mt-6 mb-6;
+}
+
+@utility prose {
+  @apply prose-sm;
+}
+
+/* Config */
+@plugin "daisyui" {
+  themes:
+    lofi --default,
+    sunset --prefersdark;
+}

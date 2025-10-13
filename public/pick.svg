@@ -1,0 +1,21 @@
+<!--
+  Pick Icon
+  Created by: Mustafa Levent Fidancı
+  Github: https://github.com/levent-86
+  LinkedIn: https://www.linkedin.com/in/mustafaleventfidanci/
+  Date: 2025-10-07
+  License: MIT
+  Free to use, modify and distribute.
+-->
+
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 128 128" stroke="#5fa8ad" fill="#5fa8ad">
+  <!-- Head -->
+  <path d="M6 40 
+           C42 4, 86 4, 122 40 
+           C86 24, 42 24, 6 40 Z" 
+        stroke-width="6"/>
+
+  <!-- Handle -->
+  <rect x="58" y="1" width="12" height="126" rx="6" />
+</svg>
+

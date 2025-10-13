@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Scrap",
+  "version": "1.0",
+  "description": "Scrap websites manually and easily.",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "pick128.png"
+  }
+}

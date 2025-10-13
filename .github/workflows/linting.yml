@@ -1,0 +1,41 @@
+name: Code Quality & Auto-Format
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  lint-and-fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js and Cache
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20.19.5'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Prettier and ESLint
+        run: |
+          npm run format
+          npm run lintfix
+
+      - name: Commit Auto-Fixes (if any)
+        uses: autofix-ci/action@v1
+        with:
+          commit-message: 'Apply automatic code formatting fixes'
