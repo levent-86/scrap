@@ -29,7 +29,7 @@ h6 {
 
 @utility prose {
   @apply prose-sm;
-  @apply text-sm/5
+  @apply text-sm/5;
 }
 
 /* Config */
