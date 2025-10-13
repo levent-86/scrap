@@ -1,4 +1,4 @@
-name: Code Quality & Auto-Format
+name: autofix.ci
 
 on:
   push:
