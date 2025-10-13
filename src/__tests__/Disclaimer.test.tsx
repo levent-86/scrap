@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Disclaimer } from '../components/Disclaimer';
+import { Disclaimer } from '../components/Onboarding/Disclaimer';
 import userEvent from '@testing-library/user-event';
 
-describe('Disclaimer', () => {
+describe('Disclaimer component', () => {
   beforeEach(() => localStorage.clear());
   afterEach(() => vi.resetAllMocks());
 
@@ -13,18 +13,12 @@ describe('Disclaimer', () => {
     render(<Disclaimer setIsAgreed={mock} />);
 
     expect(screen.getByText(/terms of use and disclaimer/i)).to.exist;
-    expect(screen.getByText(/manual tool designed to help you select/i)).to
-      .exist;
-    expect(screen.getByText(/responsibility:/i)).to.exist;
-    expect(screen.getByText(/You are solely responsible for ensuring/i)).to
-      .exist;
-    expect(screen.getByText(/legal Compliance:/i)).to.exist;
-    expect(screen.getByText(/Unauthorized collection of personal data/i)).to
-      .exist;
-    expect(screen.getByText(/no warranty:/i)).to.exist;
-    expect(
-      screen.getByText(/This extension is provided "as is". The developer/i)
-    ).to.exist;
+    expect(screen.getByText(/1. Data Collection and Privacy:/i)).to.exist;
+    expect(screen.getByText(/This extension is a strictly manual/i)).to.exist;
+    expect(screen.getByText(/2. User Responsibility/i)).to.exist;
+    expect(screen.getByText(/You, the user, are solely responsible/i)).to.exist;
+    expect(screen.getByText(/3. No Warranty:/i)).to.exist;
+    expect(screen.getByText(/The developer makes no guarantees/i)).to.exist;
     expect(screen.getByText(/By using this extension, you declare/i)).to.exist;
     expect(screen.getByText(/greement/i)).to.exist;
     expect(

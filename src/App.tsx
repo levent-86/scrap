@@ -1,4 +1,4 @@
-import { Welcoming } from './components/Welcoming';
+import { Welcoming } from './components/Onboarding/Welcoming';
 
 function App() {
   return (

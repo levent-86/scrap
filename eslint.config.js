@@ -20,16 +20,9 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      // Semi-colon rule
       semi: ['warn', 'always'],
-
-      // The last line should be empty
-      'eol-last': ['warn', 'always'],
-
-      // Quotes should be only single quotes
       quotes: ['warn', 'single', { allowTemplateLiterals: true }],
-
-      // No need to import React
+      'eol-last': ['warn', 'always'],
       'react/react-in-jsx-scope': 'off',
     },
   },

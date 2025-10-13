@@ -9,13 +9,15 @@
 -->
 
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 128 128" stroke="#5fa8ad" fill="#5fa8ad">
-  <!-- Head -->
-  <path d="M6 40 
-           C42 4, 86 4, 122 40 
-           C86 24, 42 24, 6 40 Z" 
-        stroke-width="6"/>
+  <g transform="rotate(-45, 64, 64)">
+    <!-- Head -->
+    <path d="M6 40 
+            C42 4, 86 4, 122 40 
+            C86 24, 42 24, 6 40 Z" 
+          stroke-width="6"/>
 
-  <!-- Handle -->
-  <rect x="58" y="1" width="12" height="126" rx="6" />
+    <!-- Handle -->
+    <rect x="58" y="1" width="12" height="126" rx="6" />
+  </g>
 </svg>
 

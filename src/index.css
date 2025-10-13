@@ -6,7 +6,7 @@
 html,
 body {
   font-family: 'Exo', sans-serif;
-  height: 220px;
+  min-height: 220px;
   min-width: 420px;
   padding: 0.5em;
 }
@@ -22,18 +22,19 @@ h6 {
 
 /* Customize */
 @utility btn {
-  @apply btn-secondary;
+  @apply btn-primary;
   @apply btn-outline;
   @apply mt-6 mb-6;
 }
 
 @utility prose {
   @apply prose-sm;
+  @apply text-sm/5
 }
 
 /* Config */
 @plugin "daisyui" {
   themes:
-    lofi --default,
-    sunset --prefersdark;
+    sunset --default,
+    lofi --prefersdark;
 }
