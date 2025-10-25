@@ -25,9 +25,7 @@ export function SidePanelListener() {
 
   // Do the same for activated tab
   chrome.tabs.onActivated.addListener(async () => {
-    const { showSidePanel } = await chrome.storage.local.get([
-      'showSidePanel',
-    ]);
+    const { showSidePanel } = await chrome.storage.local.get(['showSidePanel']);
 
     await chrome.sidePanel.setOptions({
       path: 'sidepanel.html',

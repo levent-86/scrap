@@ -20,9 +20,11 @@ describe('SidePanelListener', () => {
   });
 
   it('onUpdated callback should enable side panel when showSidePanel is true', async () => {
-    const storageGetMock = (chrome.storage.local.get as Mock).mockResolvedValue({
-      showSidePanel: true,
-    });
+    const storageGetMock = (chrome.storage.local.get as Mock).mockResolvedValue(
+      {
+        showSidePanel: true,
+      }
+    );
 
     SidePanelListener();
 
@@ -45,9 +47,11 @@ describe('SidePanelListener', () => {
   });
 
   it('onUpdated callback should disable side panel when showSidePanel is false', async () => {
-    const storageGetMock = (chrome.storage.local.get as Mock).mockResolvedValue({
-      showSidePanel: false,
-    });
+    const storageGetMock = (chrome.storage.local.get as Mock).mockResolvedValue(
+      {
+        showSidePanel: false,
+      }
+    );
 
     SidePanelListener();
 
@@ -71,7 +75,7 @@ describe('SidePanelListener', () => {
 
   it('onUpdated callback should do nothing if tab.url is missing', async () => {
     SidePanelListener();
-    
+
     const onUpdatedCallback = (chrome.tabs.onUpdated.addListener as Mock).mock
       .calls[0][0];
 
@@ -90,7 +94,7 @@ describe('SidePanelListener', () => {
     });
 
     SidePanelListener();
-    
+
     const onUpdatedCallback = (chrome.tabs.onUpdated.addListener as Mock).mock
       .calls[0][0];
 
@@ -98,16 +102,16 @@ describe('SidePanelListener', () => {
 
     expect(chrome.tabs.onActivated.addListener).toHaveBeenCalledTimes(1);
 
-    const onActivatedCallback = (
-      chrome.tabs.onActivated.addListener as Mock
-    ).mock.calls[0][0];
+    const onActivatedCallback = (chrome.tabs.onActivated.addListener as Mock)
+      .mock.calls[0][0];
 
-    const storageGetMock = (chrome.storage.local.get as Mock)
-      .mockResolvedValue({ showSidePanel: false });
+    const storageGetMock = (chrome.storage.local.get as Mock).mockResolvedValue(
+      { showSidePanel: false }
+    );
 
     await onActivatedCallback();
 
-    expect(storageGetMock).toHaveBeenCalledTimes(2); 
+    expect(storageGetMock).toHaveBeenCalledTimes(2);
     expect(storageGetMock).toHaveBeenLastCalledWith(['showSidePanel']);
 
     expect(chrome.sidePanel.setOptions).toHaveBeenLastCalledWith({
