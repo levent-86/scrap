@@ -7,20 +7,26 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
       all: true,
-      reportsDirectory: './coverage',
+      reportsDirectory: './coverage/scrap',
 
-      include: ['src/components/**/*.{ts,tsx}'],
+      include: ['src/**/**/*.{ts,tsx}'],
       exclude: [
         'src/**/*.test.{ts,tsx}',
-        'src/test/**',
-        'src/mocks/**',
-        'src/main.tsx',
-        '**/index.{ts,tsx}',
+        'src/__tests__/**',
+        'src/background/service-worker.ts',
+        'src/background/SidePanel/SidePanel.ts',
+        'src/Popup/PopupApp.tsx',
+        'src/Popup/popupMain.tsx',
+        'src/SidePanel/SidePanelApp.tsx',
+        'src/SidePanel/sidePanelMain.tsx',
+        'src/@types/**',
+        'src/*.d.ts',
       ],
     },
 
     globals: true,
     environment: 'happy-dom',
+    setupFiles: 'vitest.setup.ts',
 
     alias: {
       '@/': new URL('./src/', import.meta.url).pathname,

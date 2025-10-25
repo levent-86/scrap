@@ -113,6 +113,8 @@ We follow a standard workflow to ensure code quality and consistency.
 
 ## Testing
 
+This project uses Test Driven Development (TDD) principles. Please follow this approach when contributing.
+
 - **Unit Tests:** You must write unit tests for any new features or bug fixes. Run tests locally with the `npm run test` command. Your PR will not be merged unless it passes the full test suite run by GitHub Actions.
 - **Manual Testing:** Before submitting a PR, please manually test your changes in the Chrome extension, verifying that existing features still work as expected.
 

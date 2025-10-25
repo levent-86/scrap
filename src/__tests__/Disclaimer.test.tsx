@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Disclaimer } from '../components/Onboarding/Disclaimer';
+import { Disclaimer } from '../Popup/Onboarding/Disclaimer';
 import userEvent from '@testing-library/user-event';
 
 describe('Disclaimer component', () => {

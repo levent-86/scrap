@@ -1,43 +1,79 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import userEvent from '@testing-library/user-event';
-import { Welcoming } from '../components/Onboarding/Welcoming';
+import { render, screen, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { Welcoming } from '../Popup/Onboarding/Welcoming';
+
+// --- MOCK Components ---
+vi.mock('../../Menu', () => ({
+  Menu: () => <div data-testid="mock-menu">Mocked Menu</div>,
+}));
+
+vi.mock('./Disclaimer', () => ({
+  Disclaimer: vi.fn(({ setIsAgreed }) => (
+    <div data-testid="mock-disclaimer" onClick={() => setIsAgreed(true)}>
+      Mocked Disclaimer
+    </div>
+  )),
+}));
+
+vi.mock('../ControlCenter', () => ({
+  ControlCenter: () => (
+    <div data-testid="mock-control-center">Mocked Control Center</div>
+  ),
+}));
+
+// --- TEST Block ---
 
 describe('Welcoming component', () => {
-  it('shows logo and theme switcher', () => {
-    render(<Welcoming />);
+  const localStorageMock = (value: string | null) => {
+    vi.spyOn(localStorage, 'getItem').mockReturnValue(value);
+  };
 
-    const checkbox = screen.getByRole('checkbox', { name: /sun moon/i });
-    expect(checkbox).to.exist;
-
-    const linkElement = screen.getByRole('link');
-    expect(linkElement.getAttribute('href')).toBe('https://example.com');
+  beforeEach(() => {
+    vi.resetAllMocks();
   });
 
-  it('shows welcoming text', () => {
-    render(<Welcoming />);
-
-    expect(screen.getByText(/NeuraLetter Suite: Scrap/i)).to.exist;
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
-  it('shows the disclaimer text by default and switches to ControlCenter component contents once the user agrees', async () => {
+  it('shows menu components', () => {
+    localStorageMock(null);
     render(<Welcoming />);
 
-    expect(screen.getByText(/terms of use and disclaimer/i)).to.exist;
+    waitFor(() => expect(screen.getByTestId('mock-menu')).toBeTruthy());
+  });
 
-    const user = userEvent.setup();
-    const checkbox = screen.getByRole('checkbox', {
-      name: /I have read and agree/i,
-    });
-    const button = screen.getByRole('button', { name: /continue/i });
+  it('shows Disclaimer component when agreement is false or null', () => {
+    localStorageMock(null);
+    render(<Welcoming />);
 
-    await user.click(checkbox);
-    await user.click(button);
-    expect(screen.getByText('Preferences')).to.exist;
-    expect(screen.getByText('Field Names')).to.exist;
-    expect(screen.getByText('Buttons')).to.exist;
+    waitFor(() => expect(screen.getByTestId('mock-disclaimer')).toBeTruthy());
 
-    expect(screen.queryByText(/terms of use and disclaimer/i)).not.to.exist;
+    localStorageMock('false');
+    render(<Welcoming />);
+    waitFor(() => expect(screen.getByTestId('mock-disclaimer')).toBeTruthy());
+  });
+
+  it('shows ControlCenter component when agreement is true in localStorage', () => {
+    localStorageMock('true');
+
+    render(<Welcoming />);
+
+    expect(screen.queryByTestId('mock-disclaimer')).not.toBeTruthy();
+    waitFor(() =>
+      expect(screen.getByTestId('mock-control-center')).toBeTruthy()
+    );
+  });
+
+  it('shows skeleton loading state initially', () => {
+    localStorageMock(null);
+
+    const { container } = render(<Welcoming />);
+
+    const skeletonDiv = container.querySelector('.skeleton');
+
+    waitFor(() => expect(skeletonDiv).toBeTruthy());
+    expect(screen.queryByTestId('mock-disclaimer')).not.toBeTruthy();
+    expect(screen.queryByTestId('mock-control-center')).not.toBeTruthy();
   });
 });

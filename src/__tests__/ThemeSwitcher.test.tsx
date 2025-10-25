@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { render, screen } from '@testing-library/react';
 import { afterAll, describe, expect, it } from 'vitest';
-import { ThemeSwitcher } from '../components/Onboarding/ThemeSwitcher';
+import { ThemeSwitcher } from '../ThemeSwitcher';
 import userEvent from '@testing-library/user-event';
 
 describe('ThemeSwitcher component', () => {

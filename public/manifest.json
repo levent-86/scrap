@@ -3,8 +3,27 @@
   "name": "Scrap",
   "version": "1.0",
   "description": "Scrap websites manually and easily.",
+  "permissions": ["tabs", "activeTab", "scripting", "storage", "sidePanel"],
   "action": {
-    "default_popup": "index.html",
-    "default_icon": "pick128.png"
+    "default_title": "Scrap",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/pick-16.png",
+      "32": "icons/pick-32.png",
+      "48": "icons/pick-48.png"
+    }
+  },
+  "icons": {
+    "16": "icons/pick-16.png",
+    "32": "icons/pick-32.png",
+    "48": "icons/pick-48.png",
+    "128": "icons/pick-128.png"
+  },
+  "host_permissions": ["*://*/*"],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
   }
 }

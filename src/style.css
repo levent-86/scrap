@@ -4,10 +4,11 @@
 
 /* Fonts */
 html,
-body {
+body,
+:root {
   font-family: 'Exo', sans-serif;
   min-height: 220px;
-  min-width: 420px;
+  min-width: 320px;
   padding: 0.5em;
 }
 

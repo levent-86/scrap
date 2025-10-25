@@ -1,10 +1,10 @@
 /* 
-    Disclaimer.tsx component
+Disclaimer.tsx component
 
-    This component fulfills the Terms of Use and Disclaimer requirements. 
-    The user clicks a checkbox indicating their acceptance, 
-    and when they click the "Continue" button, the information 
-    "isUserAgreed": "true" is stored in localStorage.
+This component fulfills the Terms of Use and Disclaimer requirements. 
+The user clicks a checkbox indicating their acceptance, 
+and when they click the "Continue" button, the information 
+"isUserAgreed": "true" is stored in localStorage.
 */
 
 import React, { useState } from 'react';

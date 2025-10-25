@@ -1,10 +1,10 @@
 /*
-    ThemeSwitcher.tsx Component
+ThemeSwitcher.tsx Component
 
-    This component provides a toggle switch to control the application's theme.
-    It reads and persists the 'isdark' preference in localStorage, defaulting to 'false' (lofi - light theme).
-    The switch visually controls the theme by setting the 'data-theme' attribute on the <html> tag,
-    which relies on the DaisyUI configuration for 'sunset' and 'lofi' themes.
+This component provides a toggle switch to control the application's theme.
+It reads and persists the 'isdark' preference in localStorage, defaulting to 'false' (lofi - light theme).
+The switch visually controls the theme by setting the 'data-theme' attribute on the <html> tag,
+which relies on the DaisyUI configuration for 'sunset' and 'lofi' themes.
 */
 
 import { useEffect, useState } from 'react';
