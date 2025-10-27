@@ -71,6 +71,7 @@ export const CellNames = () => {
         <button
           className="btn btn-circle btn-success"
           onClick={handleAddButton}
+          data-testid="add-btn"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +93,7 @@ export const CellNames = () => {
           className="btn btn-circle btn-error ml-3"
           disabled={headers.length <= 1}
           onClick={handleSubButton}
+          data-testid="sub-btn"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
