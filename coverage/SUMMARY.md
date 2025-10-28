@@ -9,71 +9,74 @@ Coverage report from CLI
  RUN  v3.2.4 /scrap
       Coverage enabled with v8
 
- ✓ src/__tests__/WorkStarter.test.tsx (4 tests) 103ms
+ ✓ src/__tests__/WorkStarter.test.tsx (4 tests) 114ms
    ✓ WorkStarter Component (4)
-     ✓ should render the "START" button 42ms
-     ✓ should call all chrome APIs in order when button is clicked 29ms
-     ✓ should not call sidePanel APIs if no tab ID is found 16ms
-     ✓ should log an error if sidePanel.open fails 15ms
- ✓ src/__tests__/ThemeSwitcher.test.tsx (1 test) 94ms
+     ✓ should render the "START" button 35ms
+     ✓ should call all chrome APIs in order when button is clicked 41ms
+     ✓ should not call sidePanel APIs if no tab ID is found 15ms
+     ✓ should log an error if sidePanel.open fails 21ms
+
+ ✓ src/__tests__/ThemeSwitcher.test.tsx (1 test) 100ms
    ✓ ThemeSwitcher component (1)
-     ✓ should switch dark and light theme according to user interaction 92ms
- ✓ src/__tests__/ControlCenterPopup.test.tsx (5 tests) 78ms
-   ✓ ControlCenter Component (5)
-     ✓ should render Cell Names collapse and Mocked WorkStarter 41ms
-     ✓ should initialize showSidePanel to false if it does not exist in storage 9ms
-     ✓ should initialize CSV data with empty headers/records if it does not exist in storage 7ms
-     ✓ should NOT initialize showSidePanel if it already exists in storage 6ms
-     ✓ should NOT initialize CSV data if it already exists in storage 12ms
- ✓ src/__tests__/Disclaimer.test.tsx (6 tests) 126ms
-   ✓ Disclaimer component (6)
-     ✓ shows disclaimer writings 35ms
-     ✓ shows checkbox and button 11ms
-     ✓ button is disabled as default 5ms
-     ✓ click on checkbox enables button 38ms
-     ✓ set agreement to local storage and updates state when user agrees 25ms
-     ✓ does not set localStorage if checkbox is not checked 9ms
- ✓ src/__tests__/WorkStopper.test.tsx (2 tests) 70ms
+     ✓ should switch dark and light theme according to user interaction 97ms
+ ✓ src/__tests__/WorkStopper.test.tsx (2 tests) 83ms
    ✓ WorkStopper Component (2)
-     ✓ should render the "STOP" button and info text 39ms
-     ✓ should call all chrome APIs to disable the side panel when clicked 28ms
- ✓ src/__tests__/Welcoming.test.tsx (4 tests) 118ms
+     ✓ should render the "STOP" button and info text 42ms
+     ✓ should call all chrome APIs to disable the side panel when clicked 39ms
+ ✓ src/__tests__/Welcoming.test.tsx (4 tests) 125ms
    ✓ Welcoming component (4)
-     ✓ shows menu components 59ms
-     ✓ shows Disclaimer component when agreement is false or null 28ms
-     ✓ shows ControlCenter component when agreement is true in localStorage 16ms
-     ✓ shows skeleton loading state initially 12ms
- ✓ src/__tests__/CellNames.test.tsx (8 tests) 347ms
+     ✓ shows menu components 64ms
+     ✓ shows Disclaimer component when agreement is false or null 27ms
+     ✓ shows ControlCenter component when agreement is true in localStorage 15ms
+     ✓ shows skeleton loading state initially 16ms
+ ✓ src/__tests__/ControlCenterPopup.test.tsx (7 tests) 165ms
+   ✓ ControlCenter Component (7)
+     ✓ should render Cell Names collapse and Mocked WorkStarter 59ms
+     ✓ should initialize showSidePanel to false if it does not exist in storage 14ms
+     ✓ should NOT initialize showSidePanel if it already exists in storage 15ms
+     ✓ should initialize HEADERS with default data if it does not exist in storage 14ms
+     ✓ should NOT initialize HEADERS if it already exists in storage 23ms
+     ✓ should initialize DATA with empty array if it does not exist in storage 18ms
+     ✓ should NOT initialize DATA if it already exists in storage 17ms
+ ✓ src/__tests__/Disclaimer.test.tsx (6 tests) 176ms
+   ✓ Disclaimer component (6)
+     ✓ shows disclaimer writings 39ms
+     ✓ shows checkbox and button 16ms
+     ✓ button is disabled as default 6ms
+     ✓ click on checkbox enables button 53ms
+     ✓ set agreement to local storage and updates state when user agrees 41ms
+     ✓ does not set localStorage if checkbox is not checked 19ms
+ ✓ src/__tests__/CellNames.test.tsx (8 tests) 405ms
    ✓ CellNames Component (8)
-     ✓ should render an initial empty input field 42ms
-     ✓ should load headers from chrome storage on mount 8ms
-     ✓ should add a new empty input field when "+" button is clicked 44ms
+     ✓ should load headers from chrome storage on mount 38ms
+     ✓ should add a new empty input field when "+" button is clicked 38ms
      ✓ should remove the last input field when "-" button is clicked 32ms
-     ✓ should disable the "-" button when only one input remains 24ms
-     ✓ should update the header name when input changes 42ms
-     ✓ should save non-empty headers to storage, preserving existing records 110ms
-     ✓ should save headers when existing records are null/undefined 44ms
- ✓ src/__tests__/SidePanelListener.test.ts (5 tests) 8ms
+     ✓ should disable the "-" button when only the mandatory ID input remains 24ms
+     ✓ should update the header label and key when a non-ID input changes 98ms
+     ✓ should NOT update the header label or key when the ID input changes 7ms
+     ✓ should save non-empty headers, preserving the mandatory ID header 136ms
+     ✓ should save only the ID header if all other fields are empty 30ms
+ ✓ src/__tests__/SidePanelListener.test.ts (5 tests) 7ms
    ✓ SidePanelListener (5)
-     ✓ chrome.tabs.onUpdated listener should be registered 4ms
-     ✓ onUpdated callback should enable side panel when showSidePanel is true 2ms
+     ✓ chrome.tabs.onUpdated listener should be registered 3ms
+     ✓ onUpdated callback should enable side panel when showSidePanel is true 1ms
      ✓ onUpdated callback should disable side panel when showSidePanel is false 0ms
      ✓ onUpdated callback should do nothing if tab.url is missing 0ms
      ✓ onUpdated callback should register onActivated listener 0ms
- ✓ src/__tests__/ControlCenterSidePanel.test.tsx (1 test) 35ms
+ ✓ src/__tests__/ControlCenterSidePanel.test.tsx (1 test) 46ms
    ✓ SidePanel/ControlCenter Component (1)
-     ✓ should render child components and layout 34ms
+     ✓ should render child components and layout 45ms
 
  Test Files  9 passed (9)
-      Tests  36 passed (36)
-   Start at  22:38:25
-   Duration  1.84s (transform 327ms, setup 168ms, collect 2.35s, tests 978ms, environment 3.49s, prepare 903ms)
+      Tests  38 passed (38)
+   Start at  23:24:44
+   Duration  2.05s (transform 380ms, setup 205ms, collect 2.28s, tests 1.22s, environment 3.69s, prepare 970ms)
 
  % Coverage report from v8
 ------------------------------------|---------|----------|---------|---------|-------------------
 File                                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 ------------------------------------|---------|----------|---------|---------|-------------------
-All files                           |     100 |    98.24 |     100 |     100 |                   
+All files                           |   99.75 |    91.17 |     100 |   99.75 |                   
  src                                |     100 |      100 |     100 |     100 |                   
   Menu.tsx                          |     100 |      100 |     100 |     100 |                   
   ThemeSwitcher.tsx                 |     100 |      100 |     100 |     100 |                   
@@ -82,8 +85,8 @@ All files                           |     100 |    98.24 |     100 |     100 |
  src/Popup/Onboarding               |     100 |      100 |     100 |     100 |                   
   Disclaimer.tsx                    |     100 |      100 |     100 |     100 |                   
   Welcoming.tsx                     |     100 |      100 |     100 |     100 |                   
- src/Popup/Options                  |     100 |    94.44 |     100 |     100 |                   
-  CellNames.tsx                     |     100 |    94.44 |     100 |     100 | 49                
+ src/Popup/Options                  |   99.09 |    76.92 |     100 |   99.09 |                   
+  CellNames.tsx                     |   99.09 |    76.92 |     100 |   99.09 | 43                
  src/Popup/WorkStarter              |     100 |      100 |     100 |     100 |                   
   WorkStarter.tsx                   |     100 |      100 |     100 |     100 |                   
  src/SidePanel                      |     100 |      100 |     100 |     100 |                   

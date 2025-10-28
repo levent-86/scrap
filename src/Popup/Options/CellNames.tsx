@@ -1,72 +1,97 @@
-import React, { useEffect, useState } from 'react';
-import { type CsvStorage } from '../ControlCenter';
+/* 
+CellNames.tsx
 
-const CSV_DATA_KEY = 'csvDataRecords';
+This component accepts cell names to save to chrome.storage.
+CRUD operations - add, remove, and change cell names.
+*/
+
+import React, { useEffect, useState } from 'react';
+import { type Header } from '../ControlCenter';
+
+const HEADERS = 'headers';
 
 export const CellNames = () => {
-  const [headers, setHeaders] = useState<string[]>(['']);
+  const [headers, setHeaders] = useState<Header[] | undefined>(undefined);
 
   useEffect(() => {
-    chrome.storage.local.get(CSV_DATA_KEY, (result) => {
-      const storedData = result[CSV_DATA_KEY] as CsvStorage;
+    chrome.storage.local.get(HEADERS, (result) => {
+      const storedHeaders = result[HEADERS] as Header[] | undefined;
 
-      if (storedData && storedData.headers && storedData.headers.length > 0) {
-        // Eğer kayıtlı başlıklar varsa, state'i onlarla başlat
-        setHeaders(storedData.headers);
+      if (Array.isArray(storedHeaders)) {
+        setHeaders(storedHeaders);
       }
     });
   }, []);
 
   const handleAddButton = () => {
-    setHeaders((prevHeaders) => [...prevHeaders, '']);
+    setHeaders((prevHeaders) => {
+      const currentHeaders = prevHeaders || [{ label: 'ID', key: 'ID' }];
+
+      const newHeader: Header = { label: ``, key: `` };
+
+      return [...currentHeaders, newHeader];
+    });
   };
 
   const handleSubButton = () => {
-    setHeaders((prevHeaders) => prevHeaders.slice(0, -1));
+    setHeaders((prevHeaders) => {
+      if (!prevHeaders) return undefined;
+
+      if (prevHeaders.length > 1) {
+        return prevHeaders.slice(0, -1);
+      }
+      return prevHeaders;
+    });
   };
 
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
-    const newHeaderName = e.target.value;
+    const newLabel = e.target.value;
 
     setHeaders((prevHeaders) => {
+      if (!prevHeaders) return undefined;
+      if (index === 0) return prevHeaders;
+
       const updatedHeaders = [...prevHeaders];
-      updatedHeaders[index] = newHeaderName;
+
+      updatedHeaders[index] = {
+        label: newLabel,
+        key: newLabel.length > 0 ? newLabel : '',
+      };
+
       return updatedHeaders;
     });
   };
 
   const handleSave = () => {
-    // Sadece başlıkları güncellemek için mevcut veriyi okumalıyız
-    chrome.storage.local.get(CSV_DATA_KEY, (result) => {
-      const storedData = result[CSV_DATA_KEY] as CsvStorage;
+    if (!headers) return;
 
-      // Mevcut kayıtları koruyarak sadece başlıkları güncelle
-      const updatedData: CsvStorage = {
-        headers: headers.filter((h) => h.trim() !== ''), // Boş başlıkları filtrele
-        records: storedData ? storedData.records : [], // Kayıtları koru
-      };
+    const headersToSave = headers.filter((header, index) => {
+      if (index === 0) return true;
 
-      chrome.storage.local.set({ [CSV_DATA_KEY]: updatedData });
+      return header.label !== '';
     });
+
+    chrome.storage.local.set({ [HEADERS]: headersToSave });
   };
   return (
     <>
       {/* Cells */}
-      {headers.map((header, index) => (
+      {headers?.map((header, index) => (
         <input
           type="text"
-          placeholder="Field name"
+          placeholder={'Field name'}
           className="input mb-3"
           key={index}
           onChange={(e) => handleInput(e, index)}
-          value={header}
+          value={header.label}
+          disabled={index === 0}
         />
       ))}
 
-      {/* Add - Sub buttons */}
+      {/* Add button */}
       <div className="flex flex-row justify-center w-full">
         <button
           className="btn btn-circle btn-success"
@@ -89,9 +114,10 @@ export const CellNames = () => {
           </svg>
         </button>
 
+        {/* Sub button */}
         <button
           className="btn btn-circle btn-error ml-3"
-          disabled={headers.length <= 1}
+          disabled={headers !== undefined && headers.length <= 1}
           onClick={handleSubButton}
           data-testid="sub-btn"
         >

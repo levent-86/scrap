@@ -13,24 +13,28 @@ interface InitProps {
   showSidePanel: boolean;
 }
 
-export interface CsvStorage {
-  headers: string[];
-  records: Array<{ [key: string]: string }>;
+export interface Header {
+  label: string;
+  key: string;
+}
+interface Data {
+  [key: string]: string | number | boolean | null;
 }
 
 const PANEL_KEY = 'showSidePanel';
-const CSV_DATA_KEY = 'csvDataRecords';
+const HEADERS = 'headers';
+const DATA = 'data';
 
 export const ControlCenter = () => {
   const InitialValues: InitProps = {
     showSidePanel: false,
   };
 
-  const InitialCsvData: CsvStorage = {
-    headers: [],
-    records: [],
-  };
+  const headers: Header[] = [{ label: 'ID', key: 'ID' }];
 
+  const data: Data[] = [];
+
+  // Side Panel
   useEffect(() => {
     chrome.storage.local.get([PANEL_KEY], (result) => {
       if (result[PANEL_KEY] === undefined) {
@@ -40,10 +44,21 @@ export const ControlCenter = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Headers
   useEffect(() => {
-    chrome.storage.local.get(CSV_DATA_KEY, (result) => {
-      if (result[CSV_DATA_KEY] === undefined) {
-        chrome.storage.local.set({ [CSV_DATA_KEY]: InitialCsvData });
+    chrome.storage.local.get(HEADERS, (result) => {
+      if (result[HEADERS] === undefined) {
+        chrome.storage.local.set({ [HEADERS]: headers });
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Data
+  useEffect(() => {
+    chrome.storage.local.get(DATA, (result) => {
+      if (result[DATA] === undefined) {
+        chrome.storage.local.set({ [DATA]: data });
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

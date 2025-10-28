@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="PROJE-LINKI" target="_blank">
+  <a href="" target="_blank">
     <img src="public/pick.svg" alt="NeuraLetter Suite Logo" width="200">
   </a>
 </p>
@@ -10,7 +10,7 @@
   <em>Fuel Your Outreach. Effortlessly scrape key contact data and company insights directly into your workflow, powering personalized emails with NeuraLetter Suite.</em>
   <br />
   <br />
-  <a href="PROJENIN_DOMAIN_LINKI">Visit Homepage</a>
+  <a href="">Visit Homepage</a>
   ·
   <a href="https://github.com/levent-86/scrap/issues">Problem Report</a>
   ·
@@ -27,7 +27,7 @@
   Click the link below to install it instantly and start scraping data.
   <br />
   <br />
-  <a href="PSEUDO_CHROME_WEB_STORE_LINK" target="_blank">
+  <a href="" target="_blank">
     <img src="https://img.shields.io/badge/Chrome%20Web%20Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Download on Chrome Web Store">
   </a>
 </p>
