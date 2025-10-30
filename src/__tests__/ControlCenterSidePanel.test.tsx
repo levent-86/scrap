@@ -21,6 +21,7 @@ describe('SidePanel/ControlCenter Component', () => {
 
     expect(screen.getByText('Mocked Menu')).toBeTruthy();
     expect(screen.getByText(/Fields/i)).toBeTruthy();
+    expect(screen.getByText(/export saves/i)).toBeTruthy();
     expect(screen.getByText(/Stop Work/i)).toBeTruthy();
     waitFor(() =>
       expect(

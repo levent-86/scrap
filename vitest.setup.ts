@@ -16,20 +16,26 @@ const chromeMock = {
       addListener: vi.fn(),
     },
     query: vi.fn(() => Promise.resolve([])),
+    remove: vi.fn(() => Promise.resolve()),
   },
   storage: {
     local: {
-      get: vi.fn(() => Promise.resolve({})),
-      set: vi.fn(() => Promise.resolve()),
+      get: vi.fn((_keys, callback) => {
+        if (callback) {
+          callback({});
+        }
+      }),
+      set: vi.fn((_keys, callback) => {
+        if (callback) {
+          callback();
+        }
+      }),
     },
   },
   sidePanel: {
     setOptions: vi.fn(() => Promise.resolve()),
     setPanelBehavior: vi.fn(() => Promise.resolve()),
     open: vi.fn(() => Promise.resolve()),
-  },
-  runtime: {
-    // onMessage: { ... } for future features...
   },
 };
 

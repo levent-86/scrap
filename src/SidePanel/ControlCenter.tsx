@@ -6,6 +6,8 @@ are declared in this component.
 */
 
 import { Menu } from '../Menu';
+import { Export } from './Export/Export';
+import { Fields } from './Fields/Fields';
 import { WorkStopper } from './WorkStopper/WorkStopper';
 
 export const ControlCenter = () => {
@@ -16,7 +18,17 @@ export const ControlCenter = () => {
       <div className="collapse collapse-arrow bg-base-100 border-base-300 border">
         <input type="radio" name="control-center" defaultChecked />
         <div className="collapse-title font-semibold">Fields</div>
-        <div className="collapse-content text-sm">Field names logic here</div>
+        <div className="collapse-content text-sm">
+          <Fields />
+        </div>
+      </div>
+
+      <div className="collapse collapse-arrow bg-base-100 border-base-300 border">
+        <input type="radio" name="control-center" />
+        <div className="collapse-title font-semibold">Export saves</div>
+        <div className="collapse-content text-sm flex justify-center">
+          <Export />
+        </div>
       </div>
 
       <div className="collapse collapse-arrow bg-base-100 border-base-300 border">

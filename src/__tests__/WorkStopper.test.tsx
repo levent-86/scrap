@@ -13,7 +13,7 @@ describe('WorkStopper Component', () => {
     render(<WorkStopper />);
 
     expect(screen.getByRole('button', { name: /stop/i })).toBeTruthy();
-    expect(screen.getByText(/stop the worker to close/i)).toBeTruthy();
+    expect(screen.getByText(/Click the Stop button to close/i)).toBeTruthy();
   });
 
   it('should call all chrome APIs to disable the side panel when clicked', async () => {

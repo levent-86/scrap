@@ -15,6 +15,7 @@
   "dependencies": {
     "@fontsource/exo": "^5.2.8",
     "@fontsource/public-sans": "^5.2.7",
+    "@simuratli/react-json-csv-converter": "^1.1.1",
     "@tailwindcss/vite": "^4.1.14",
     "@testing-library/user-event": "^14.6.1",
     "chrome-types": "^0.1.383",

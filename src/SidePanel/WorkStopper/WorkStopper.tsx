@@ -25,12 +25,23 @@ export const WorkStopper = () => {
           STOP
         </button>
 
-        <div className="flex flex-row">
-          <div className="ring-info rounded-full ring-1 text-center text-info w-9 h-5 mr-1">
-            i
-          </div>
+        <div className="flex flex-row items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="size-9 mr-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
           <p>
-            Stop the worker to close the side panel and save your system
+            Click the Stop button to close the side panel and save your system
             resources.
           </p>
         </div>

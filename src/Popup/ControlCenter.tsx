@@ -17,7 +17,7 @@ export interface Header {
   label: string;
   key: string;
 }
-interface Data {
+export interface Data {
   [key: string]: string | number | boolean | null;
 }
 
