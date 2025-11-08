@@ -32,11 +32,11 @@ const chromeMock = {
           callback();
         }
       }),
-      },
-      onChanged: {
-        addListener: vi.fn(), 
-        removeListener: mockRemoveListener, 
-    }
+    },
+    onChanged: {
+      addListener: vi.fn(),
+      removeListener: mockRemoveListener,
+    },
   },
   sidePanel: {
     setOptions: vi.fn(() => Promise.resolve()),
