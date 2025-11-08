@@ -23,6 +23,12 @@ export const CellNames = () => {
     });
   }, []);
 
+  chrome.storage.onChanged.addListener((changes) => {
+    if (changes.headers) {
+      setHeaders(changes.headers.newValue);
+    }
+  });
+
   const handleAddButton = () => {
     setHeaders((prevHeaders) => {
       const currentHeaders = prevHeaders || [{ label: 'ID', key: 'ID' }];
@@ -139,7 +145,7 @@ export const CellNames = () => {
       </div>
 
       <div className="flex flex-col w-full">
-        <button className="btn btn-success mb-3" onClick={handleSave}>
+        <button className="btn mb-3" onClick={handleSave}>
           Save Changes
         </button>
       </div>

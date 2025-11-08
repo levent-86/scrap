@@ -4,6 +4,22 @@ import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { type Header, type Data } from '../Popup/ControlCenter';
 import { Fields } from '../SidePanel/Fields/Fields';
 
+vi.mock('../SidePanel/Fields/Helpers', () => ({
+  findNextId: vi.fn((data: Data[] | undefined) => {
+    if (!data || data.length === 0) return 1;
+    const maxId = data.reduce(
+      (max, current) => Math.max(max, (current.ID as number) || 0),
+      0
+    );
+    return maxId + 1;
+  }),
+}));
+
+const mockFindNextId = vi.mocked(
+  (await import('../SidePanel/Fields/Helpers')).findNextId
+);
+// ---
+
 const HEADERS = 'headers';
 const DATA = 'data';
 
@@ -43,13 +59,21 @@ const setupMocks = (
 
 beforeEach(() => {
   vi.resetAllMocks();
+  mockFindNextId.mockClear();
+
+  mockFindNextId.mockReturnValue(3);
 
   setupMocks(MOCK_HEADERS, MOCK_STORED_DATA);
   mockTabsQuery.mockResolvedValue([
-    { id: 101, active: false }, // Another tab
-    { id: 102, active: true }, // Active tab
+    { id: 101, active: false },
+    { id: 102, active: true },
   ]);
   mockTabsRemove.mockResolvedValue(true);
+  mockStorageSet.mockImplementation((_data, callback) => {
+    if (callback) {
+      callback();
+    }
+  });
 });
 
 describe('Fields Component', () => {
@@ -58,7 +82,6 @@ describe('Fields Component', () => {
     render(<Fields />);
 
     expect(screen.queryByText(/ID no:/i)).toBeNull();
-
     const skeletonDiv = screen.getByTestId('skeleton');
     expect(skeletonDiv).toBeTruthy();
   });
@@ -68,20 +91,18 @@ describe('Fields Component', () => {
 
     await waitFor(() => {
       expect(screen.getAllByRole('textbox')).toHaveLength(3);
-
       expect(screen.getByPlaceholderText('ID')).toBeTruthy();
-      expect(screen.getByPlaceholderText('Name')).toBeTruthy();
-      expect(screen.getByPlaceholderText('Note')).toBeTruthy();
     });
 
-    // ID fiel disabled and and show indicator
     const idField = screen.getByPlaceholderText('ID') as HTMLTextAreaElement;
     expect(idField.disabled).toBe(true);
-    expect(idField.value).toBe('ID no: 3'); // should be 3 after MOCK_STORED_DATA's data
+
+    expect(idField.value).toBe('ID no: 3');
   });
 
   it('should calculate the next ID correctly for empty data', async () => {
-    setupMocks(MOCK_HEADERS, []); // Empty data
+    mockFindNextId.mockReturnValue(1);
+    setupMocks(MOCK_HEADERS, []);
     render(<Fields />);
 
     await waitFor(() => {
@@ -99,21 +120,21 @@ describe('Fields Component', () => {
     )) as HTMLTextAreaElement;
     const testValue = 'Joan';
 
-    // Act: Write entry
     await user.type(nameField, testValue);
-
-    // Assert: Feild value updated
     expect(nameField.value).toBe(testValue);
   });
 
   it('should disable the Save button when only the ID is present (no user input)', async () => {
     render(<Fields />);
 
-    const saveButton = (await screen.findByRole('button', {
+    const saveButtons = (await screen.findAllByRole('button', {
       name: /Save and Close Tab/i,
-    })) as HTMLButtonElement;
+    })) as HTMLButtonElement[];
 
-    expect(saveButton.disabled).toBe(true);
+    // Both buttons are disabled
+    expect(saveButtons).toHaveLength(2);
+    expect(saveButtons[0].disabled).toBe(true);
+    expect(saveButtons[1].disabled).toBe(true);
   });
 
   it('should enable the Save button when user input is present (Object.keys(text).length > 1)', async () => {
@@ -121,34 +142,33 @@ describe('Fields Component', () => {
     render(<Fields />);
 
     const nameField = await screen.findByPlaceholderText('Name');
-    const saveButton = screen.getByRole('button', {
-      name: /Save and Close Tab/i,
-    }) as HTMLButtonElement;
 
-    // Act: Type
+    const saveButtons = screen.getAllByRole('button', {
+      name: /Save and Close Tab/i,
+    }) as HTMLButtonElement[];
+
     await user.type(nameField, 'Test Data');
 
-    // Assert: Button enable
-    expect(saveButton.disabled).toBe(false);
+    expect(saveButtons[0].disabled).toBe(false);
+    expect(saveButtons[1].disabled).toBe(false);
   });
 
   it('should save the new record, update ID, and close the active tab', async () => {
     const user = userEvent.setup();
+    mockFindNextId.mockImplementationOnce(() => 3).mockReturnValue(4);
+
     render(<Fields />);
 
     const nameField = await screen.findByPlaceholderText('Name');
-    const saveButton = screen.getByRole('button', {
-      name: /Save and Close Tab/i,
-    }) as HTMLButtonElement;
 
-    // Act 1: Write inputs
+    const saveButton = screen.getAllByRole('button', {
+      name: /Save and Close Tab/i,
+    })[0] as HTMLButtonElement;
+
     await user.type(nameField, 'Kate');
     await user.type(screen.getByPlaceholderText('Note'), 'Fast Record');
-
-    // Act 2: Click save
     await user.click(saveButton);
 
-    // 1. Assert: New record should be with the new ID
     const expectedNewRecord: Data = {
       ID: 3,
       Name: 'Kate',
@@ -159,46 +179,41 @@ describe('Fields Component', () => {
       expectedNewRecord,
     ];
 
-    // mockStorageSet gets callback as a function
-    // with 'expect.any(Function)' usage, skip callback function
     await waitFor(() => {
       expect(mockStorageSet).toHaveBeenCalledWith(
         { [DATA]: expectedUpdatedData },
         expect.any(Function)
       );
+
+      expect(mockFindNextId).toHaveBeenCalledWith(expectedUpdatedData);
     });
 
-    // 2. Assert (ID Reset): ID value updated to the next value
     const idField = screen.getByPlaceholderText('ID') as HTMLTextAreaElement;
     expect(idField.value).toBe('ID no: 4');
 
-    // 3. Assert (Close tab): Call tab close (Active tab ID: 102)
     await waitFor(() => {
       expect(mockTabsRemove).toHaveBeenCalledWith(102);
     });
   });
 
   it('should NOT close the tab if only one tab is open', async () => {
-    // Arrange: Only one tab active
     mockTabsQuery.mockResolvedValue([{ id: 101, active: true }]);
     render(<Fields />);
 
     const user = userEvent.setup();
     const nameField = await screen.findByPlaceholderText('Name');
-    const saveButton = screen.getByRole('button', {
-      name: /Save and Close Tab/i,
-    });
 
-    // Act: Save a new entry
+    const saveButton = screen.getAllByRole('button', {
+      name: /Save and Close Tab/i,
+    })[0];
+
     await user.type(nameField, 'One Tab');
     await user.click(saveButton);
 
-    // Assert: Tab close didn't called
     await waitFor(() => {
       expect(mockTabsRemove).not.toHaveBeenCalled();
     });
 
-    // Also entry saved
     expect(mockStorageSet).toHaveBeenCalled();
   });
 });

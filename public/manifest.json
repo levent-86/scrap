@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Scrap",
-  "version": "1.0",
-  "description": "Scrap websites manually and easily.",
-  "permissions": ["tabs", "activeTab", "scripting", "storage", "sidePanel"],
+  "name": "NeuraLetter Suite: Scrap",
+  "version": "0.0.1",
+  "description": "Manually collect data from websites. Set your CSV headers, copy info using the side panel, and export your organized list.",
+  "permissions": ["tabs", "activeTab", "storage", "sidePanel"],
   "action": {
-    "default_title": "Scrap",
+    "default_title": "NeuraLetter Suite: Scrap",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/pick-16.png",

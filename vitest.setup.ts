@@ -7,6 +7,8 @@ All used chrome APIs are belongs here.
 
 import { vi } from 'vitest';
 
+const mockRemoveListener = vi.fn();
+
 const chromeMock = {
   tabs: {
     onUpdated: {
@@ -30,7 +32,11 @@ const chromeMock = {
           callback();
         }
       }),
-    },
+      },
+      onChanged: {
+        addListener: vi.fn(), 
+        removeListener: mockRemoveListener, 
+    }
   },
   sidePanel: {
     setOptions: vi.fn(() => Promise.resolve()),

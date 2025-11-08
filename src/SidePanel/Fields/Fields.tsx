@@ -4,10 +4,15 @@ Fields.tsx
 This file will show header names as fields (taken from chrome.storage).
 And when clicked to the button, data will be saved on local storage with header names.
 And active data will be closed after data saved.
+
+! DO NOT turn this file into a godfile.
+! If it's intend to to turn into a godfile,
+! then use a state management lybrary such as Zustand.
 */
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { type Header, type Data } from '../../Popup/ControlCenter';
+import { findNextId } from './Helpers';
 
 const HEADERS = 'headers';
 const DATA = 'data';
@@ -15,20 +20,6 @@ const DATA = 'data';
 interface NewRecord {
   [key: string]: string | number | boolean | null;
 }
-
-// Helper function: Find ID number in data
-// !Do I need to spare this helper to another file?
-const findNextId = (data: Data[] | undefined): number => {
-  if (!data || data.length === 0) {
-    return 1;
-  }
-  const maxId = data.reduce((max, current) => {
-    const currentId = (current.ID as number) || 0;
-    return Math.max(max, currentId);
-  }, 0);
-
-  return maxId + 1;
-};
 
 export const Fields = () => {
   const [headers, setHeaders] = useState<Header[] | undefined>(undefined);
@@ -117,6 +108,16 @@ export const Fields = () => {
 
   return (
     <>
+      {/* Upper BTN -- This Button added for easy access by user */}
+      <button
+        className="btn btn-primary w-full mt-0 mb-3"
+        onClick={handleSave}
+        disabled={Object.keys(text).length <= 1}
+      >
+        Save and Close Tab
+      </button>
+
+      {/* Inputs */}
       {headers.map((header) => {
         const headerKey = header.key;
 
@@ -136,6 +137,8 @@ export const Fields = () => {
           />
         );
       })}
+
+      {/* Lower BTN */}
       <button
         className="btn btn-primary w-full"
         onClick={handleSave}
