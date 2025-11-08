@@ -1,14 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { findNextId } from '../SidePanel/Fields/Helpers'; 
+import { findNextId } from '../SidePanel/Fields/Helpers';
 import { type Data } from '../Popup/ControlCenter';
 
 describe('findNextId Helper', () => {
-
   it('should return 1 when data array is empty', () => {
     const emptyData: Data[] = [];
     expect(findNextId(emptyData)).toBe(1);
   });
-  
+
   it('should return 1 when data array is undefined', () => {
     expect(findNextId(undefined)).toBe(1);
   });
@@ -39,7 +38,7 @@ describe('findNextId Helper', () => {
       { ID: null, name: 'B' },
       { ID: 'invalid', name: 'C' },
     ];
-      
+
     // Max ID 5 (others are 0), expectation 6
     expect(findNextId(data)).toBe(6);
   });
