@@ -3,7 +3,7 @@
   "name": "NeuraLetter Suite: Scrap",
   "version": "0.0.1",
   "description": "Manually collect data from websites. Set your CSV headers, copy info using the side panel, and export your organized list.",
-  "permissions": ["tabs", "activeTab", "storage", "sidePanel"],
+  "permissions": ["tabs", "storage", "sidePanel"],
   "action": {
     "default_title": "NeuraLetter Suite: Scrap",
     "default_popup": "popup.html",
@@ -19,7 +19,6 @@
     "48": "icons/pick-48.png",
     "128": "icons/pick-128.png"
   },
-  "host_permissions": ["*://*/*"],
   "side_panel": {
     "default_path": "sidepanel.html"
   },
