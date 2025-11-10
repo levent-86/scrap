@@ -1,14 +1,19 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { type Header, type Data } from '../Popup/ControlCenter';
 import { Fields } from '../SidePanel/Fields/Fields';
+// YENİ MOCK'LAR
+import { mockOnMessageAddListener } from '../../vitest.setup';
+const mockOnMessageRemoveListener = chrome.runtime.onMessage
+  .removeListener as Mock;
 
+// Helper Mock'u (aynı kalır)
 vi.mock('../SidePanel/Fields/Helpers', () => ({
   findNextId: vi.fn((data: Data[] | undefined) => {
     if (!data || data.length === 0) return 1;
     const maxId = data.reduce(
-      (max, current) => Math.max(max, (current.ID as number) || 0),
+      (max, current) => Math.max(max, Number(current.ID) || 0), // findNextId içindeki Number() düzeltmesi
       0
     );
     return maxId + 1;
@@ -60,6 +65,8 @@ const setupMocks = (
 beforeEach(() => {
   vi.resetAllMocks();
   mockFindNextId.mockClear();
+  mockOnMessageAddListener.mockClear(); // Yeni mock'u temizle
+  mockOnMessageRemoveListener.mockClear(); // Yeni mock'u temizle
 
   mockFindNextId.mockReturnValue(3);
 
@@ -77,6 +84,8 @@ beforeEach(() => {
 });
 
 describe('Fields Component', () => {
+  // --- Düzeltilen Testler (Placeholder metni) ---
+
   it('should show skeleton until headers are loaded', () => {
     setupMocks(undefined, undefined);
     render(<Fields />);
@@ -91,10 +100,12 @@ describe('Fields Component', () => {
 
     await waitFor(() => {
       expect(screen.getAllByRole('textbox')).toHaveLength(3);
-      expect(screen.getByPlaceholderText('ID')).toBeTruthy();
+      // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
+      expect(screen.getByPlaceholderText(/ID/i)).toBeTruthy();
     });
 
-    const idField = screen.getByPlaceholderText('ID') as HTMLTextAreaElement;
+    // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
+    const idField = screen.getByPlaceholderText(/ID/i) as HTMLTextAreaElement;
     expect(idField.disabled).toBe(true);
 
     expect(idField.value).toBe('ID no: 3');
@@ -106,7 +117,8 @@ describe('Fields Component', () => {
     render(<Fields />);
 
     await waitFor(() => {
-      const idField = screen.getByPlaceholderText('ID') as HTMLTextAreaElement;
+      // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
+      const idField = screen.getByPlaceholderText(/ID/i) as HTMLTextAreaElement;
       expect(idField.value).toBe('ID no: 1');
     });
   });
@@ -115,8 +127,9 @@ describe('Fields Component', () => {
     const user = userEvent.setup();
     render(<Fields />);
 
+    // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
     const nameField = (await screen.findByPlaceholderText(
-      'Name'
+      /Name/i
     )) as HTMLTextAreaElement;
     const testValue = 'Joan';
 
@@ -131,7 +144,6 @@ describe('Fields Component', () => {
       name: /Save and Close Tab/i,
     })) as HTMLButtonElement[];
 
-    // Both buttons are disabled
     expect(saveButtons).toHaveLength(2);
     expect(saveButtons[0].disabled).toBe(true);
     expect(saveButtons[1].disabled).toBe(true);
@@ -141,7 +153,8 @@ describe('Fields Component', () => {
     const user = userEvent.setup();
     render(<Fields />);
 
-    const nameField = await screen.findByPlaceholderText('Name');
+    // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
+    const nameField = await screen.findByPlaceholderText(/Name/i);
 
     const saveButtons = screen.getAllByRole('button', {
       name: /Save and Close Tab/i,
@@ -159,14 +172,16 @@ describe('Fields Component', () => {
 
     render(<Fields />);
 
-    const nameField = await screen.findByPlaceholderText('Name');
+    // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
+    const nameField = await screen.findByPlaceholderText(/Name/i);
 
     const saveButton = screen.getAllByRole('button', {
       name: /Save and Close Tab/i,
     })[0] as HTMLButtonElement;
 
     await user.type(nameField, 'Kate');
-    await user.type(screen.getByPlaceholderText('Note'), 'Fast Record');
+    // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
+    await user.type(screen.getByPlaceholderText(/Note/i), 'Fast Record');
     await user.click(saveButton);
 
     const expectedNewRecord: Data = {
@@ -188,7 +203,8 @@ describe('Fields Component', () => {
       expect(mockFindNextId).toHaveBeenCalledWith(expectedUpdatedData);
     });
 
-    const idField = screen.getByPlaceholderText('ID') as HTMLTextAreaElement;
+    // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
+    const idField = screen.getByPlaceholderText(/ID/i) as HTMLTextAreaElement;
     expect(idField.value).toBe('ID no: 4');
 
     await waitFor(() => {
@@ -201,7 +217,8 @@ describe('Fields Component', () => {
     render(<Fields />);
 
     const user = userEvent.setup();
-    const nameField = await screen.findByPlaceholderText('Name');
+    // DÜZELTME: Placeholder metni değiştiği için regex kullanıldı
+    const nameField = await screen.findByPlaceholderText(/Name/i);
 
     const saveButton = screen.getAllByRole('button', {
       name: /Save and Close Tab/i,
@@ -215,5 +232,122 @@ describe('Fields Component', () => {
     });
 
     expect(mockStorageSet).toHaveBeenCalled();
+  });
+
+  it('should register and cleanup the chrome.runtime.onMessage listener', async () => {
+    const { unmount } = render(<Fields />);
+
+    // Listener caled
+    await waitFor(() => {
+      expect(mockOnMessageAddListener).toHaveBeenCalled();
+    });
+
+    // unmount component
+    unmount();
+
+    // Listener removed
+    expect(mockOnMessageRemoveListener).toHaveBeenCalled();
+
+    // Mounted and removed listeners are same function
+    const registeredListener = mockOnMessageAddListener.mock.calls[0][0];
+    const removedListener = mockOnMessageRemoveListener.mock.calls[0][0];
+    expect(removedListener).toBe(registeredListener);
+  });
+
+  it('should reset ID field when "tabSwitched" message is received', async () => {
+    // Arrange
+    mockFindNextId.mockReturnValueOnce(3).mockReturnValue(50);
+    render(<Fields />);
+
+    let messageListener: Mock = vi.fn();
+    await waitFor(() => {
+      // Listener called
+      expect(mockOnMessageAddListener).toHaveBeenCalled();
+      messageListener = mockOnMessageAddListener.mock.calls[0][0];
+    });
+
+    const idFieldBefore = screen.getByPlaceholderText(
+      /ID/i
+    ) as HTMLTextAreaElement;
+    expect(idFieldBefore.value).toBe('ID no: 3');
+
+    // Act: send tabSwitched message
+    const tabSwitchedMessage = { action: 'tabSwitched' };
+    messageListener(
+      tabSwitchedMessage,
+      {} as chrome.runtime.MessageSender,
+      vi.fn()
+    );
+
+    // Assert: Update ID field (50)
+    await waitFor(() => {
+      const idFieldAfter = screen.getByPlaceholderText(
+        /ID/i
+      ) as HTMLTextAreaElement;
+      expect(idFieldAfter.value).toBe('ID no: 50');
+      // findNextId called w,th storedData (MOCK_STORED_DATA) again
+      expect(mockFindNextId).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  it('should fill the target field when "fillField" message is received', async () => {
+    // Arrange
+    render(<Fields />);
+
+    let messageListener: Mock = vi.fn();
+
+    await waitFor(() => {
+      // Listener called
+      expect(mockOnMessageAddListener).toHaveBeenCalled();
+      messageListener = mockOnMessageAddListener.mock.calls[0][0] as Mock;
+      expect(screen.getByPlaceholderText(/Name/i)).toBeTruthy();
+    });
+
+    if (!messageListener) throw new Error('Message Listener not registered.');
+
+    const nameField = screen.getByPlaceholderText(
+      /Name/i
+    ) as HTMLTextAreaElement;
+    const noteField = screen.getByPlaceholderText(
+      /Note/i
+    ) as HTMLTextAreaElement;
+
+    const fillNameMessage = { action: 'fillField', index: 1, data: 'Jane Doe' };
+
+    await act(async () => {
+      messageListener!(
+        fillNameMessage,
+        {} as chrome.runtime.MessageSender,
+        vi.fn()
+      );
+    });
+
+    waitFor(() => {
+      expect(nameField.value).toBe('Jane Doe');
+    });
+
+    const fillNoteMessage = {
+      action: 'fillField',
+      index: 2,
+      data: 'Very Important Note',
+    };
+
+    await act(async () => {
+      messageListener!(
+        fillNoteMessage,
+        {} as chrome.runtime.MessageSender,
+        vi.fn()
+      );
+    });
+
+    waitFor(() => {
+      expect(noteField.value).toBe('Very Important Note');
+    });
+
+    // Assert 3: Save button activated
+    const saveButtons = screen.getAllByRole('button', {
+      name: /Save and Close Tab/i,
+    }) as HTMLButtonElement[];
+    waitFor(() => expect(saveButtons[0].disabled).toBe(false));
   });
 });

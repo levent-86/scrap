@@ -4,10 +4,9 @@ Fields.tsx
 This file will show header names as fields (taken from chrome.storage).
 And when clicked to the button, data will be saved on local storage with header names.
 And active data will be closed after data saved.
+As a new feature, numbers on the keyboard are filling the related textarea.
 
 ! DO NOT turn this file into a godfile.
-! If it's intend to to turn into a godfile,
-! then use a state management lybrary such as Zustand.
 */
 
 import React, { useEffect, useState, useCallback } from 'react';
@@ -20,6 +19,27 @@ const DATA = 'data';
 interface NewRecord {
   [key: string]: string | number | boolean | null;
 }
+
+interface FillFieldMessage {
+  action: 'fillField';
+  index: number;
+  data: string;
+}
+
+interface TabSwitchedMessage {
+  action: 'tabSwitched';
+}
+
+type MessageListener = (
+  message:
+    | FillFieldMessage
+    | TabSwitchedMessage
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    | { action: string; [key: string]: any },
+  sender: chrome.runtime.MessageSender,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  sendResponse: (response?: any) => void
+) => boolean | undefined;
 
 export const Fields = () => {
   const [headers, setHeaders] = useState<Header[] | undefined>(undefined);
@@ -45,9 +65,46 @@ export const Fields = () => {
     });
   }, []);
 
+  // New Feature: keyboard to textarea
+  useEffect(() => {
+    const messageListener: MessageListener = (message) => {
+      // Lookup for switched tab
+      if (message && message.action === 'tabSwitched') {
+        const nextId = findNextId(storedData);
+        setText({ ID: nextId });
+      }
+
+      if (message && message.action === 'fillField' && headers) {
+        const fillMessage = message as FillFieldMessage;
+
+        const targetIndex = fillMessage.index + 1; // Don't start from first textarea
+        const collectedData = fillMessage.data;
+
+        const headerIndex = targetIndex - 1;
+
+        if (headerIndex >= 0 && headerIndex < headers.length) {
+          const targetHeaderKey = headers[headerIndex].key;
+
+          setText((prevText) => ({
+            ...prevText,
+            [targetHeaderKey]: collectedData,
+          }));
+        }
+        return undefined;
+      }
+
+      return undefined;
+    };
+
+    chrome.runtime.onMessage.addListener(messageListener);
+
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
+  }, [headers, storedData]);
+
   // Update textarea
   // useCallback used for blocking rerender on each refresh
-  // !Should I use useCallback for this?
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>, headerKey: string) => {
       const inputValue = e.target.value;
@@ -105,10 +162,9 @@ export const Fields = () => {
       </>
     );
   }
-
   return (
     <>
-      {/* Upper BTN -- This Button added for easy access by user */}
+      {/* Upper BTN */}
       <button
         className="btn btn-primary w-full mt-0 mb-3"
         onClick={handleSave}
@@ -118,7 +174,7 @@ export const Fields = () => {
       </button>
 
       {/* Inputs */}
-      {headers.map((header) => {
+      {headers.map((header, index) => {
         const headerKey = header.key;
 
         const isIdField = headerKey === 'ID';
@@ -127,14 +183,19 @@ export const Fields = () => {
           : text[headerKey] || '';
 
         return (
-          <textarea
-            className="textarea textarea-accent textarea-sm mb-3 w-full"
-            placeholder={header.label}
-            key={headerKey}
-            disabled={isIdField}
-            onChange={(e) => handleInput(e, headerKey)}
-            value={fieldValue as string}
-          />
+          <>
+            <label className="floating-label">
+              <textarea
+                className="textarea textarea-accent textarea-sm mb-3 w-full"
+                placeholder={`${header.label} \n(Press ${index} on your keyboard after highlight a text)`}
+                key={headerKey}
+                onChange={(e) => handleInput(e, headerKey)}
+                value={fieldValue as string}
+                disabled={isIdField}
+              />
+              <span>{header.label}</span>
+            </label>
+          </>
         );
       })}
 
