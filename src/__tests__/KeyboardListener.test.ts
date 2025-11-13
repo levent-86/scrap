@@ -29,19 +29,21 @@ global.chrome = {
 } as unknown as typeof chrome;
 
 describe('KeyboardListener', () => {
+
   beforeEach(() => {
     // Clean mocks
     vi.clearAllMocks();
   });
-
+  
   describe('Content Script Injection', () => {
+    
     it('should inject content.js into non-chrome tabs', async () => {
       // Arrange: Define 4 tabs one is undefined
       const tabs = [
         { id: 101, url: 'https://example.com/', active: false }, // Geçerli
-        { id: 102, url: 'chrome://settings', active: true }, // Hariç
-        { id: undefined, url: 'https://test.net/', active: false }, // Hariç (ID yok)
-        { id: 104, url: 'https://google.com/', active: true }, // Geçerli
+        { id: 102, url: 'chrome://settings', active: true },      // Hariç
+        { id: undefined, url: 'https://test.net/', active: false },// Hariç (ID yok)
+        { id: 104, url: 'https://google.com/', active: true },      // Geçerli
       ];
       mockTabsQuery.mockResolvedValue(tabs);
 
@@ -50,19 +52,19 @@ describe('KeyboardListener', () => {
 
       // Assert 1: executeScript should be called only for two tabs
       expect(mockExecuteScript).toHaveBeenCalledTimes(2);
-
+      
       // Assert 2: injected to first tab
       expect(mockExecuteScript).toHaveBeenCalledWith({
         target: { tabId: 101 },
         files: ['content.js'],
       });
-
+      
       // Assert 3: injected to second tab
       expect(mockExecuteScript).toHaveBeenCalledWith({
         target: { tabId: 104 },
         files: ['content.js'],
       });
-
+      
       // Assert 4: not injected to chrome:// tab
       expect(mockExecuteScript).not.toHaveBeenCalledWith({
         target: { tabId: 102 },
@@ -75,13 +77,7 @@ describe('KeyboardListener', () => {
       const error = new Error('Scripting failed');
       mockTabsQuery.mockResolvedValue([{ id: 201, url: 'https://error.com/' }]);
       mockExecuteScript.mockRejectedValue(error); // ExecuteScript error
-<<<<<<< HEAD
       const mockConsoleError = vi.spyOn(console, 'log').mockImplementation(() => {});
-=======
-      const mockConsoleError = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
->>>>>>> 5d1558604aa14e98ac08432961f2891aacd6c751
 
       // Act
       await KeyboardListener();
@@ -92,17 +88,14 @@ describe('KeyboardListener', () => {
         'Failed to inject into Tab ID: 201:',
         error
       );
-
+      
       mockConsoleError.mockRestore();
     });
   });
 
+
   describe('Tab listeners', () => {
-<<<<<<< HEAD
     
-=======
-    // Yardımcı fonksiyon: Dinleyiciyi döndür
->>>>>>> 5d1558604aa14e98ac08432961f2891aacd6c751
     const getTabListener = (mockListener: Mock) => {
       expect(mockListener).toHaveBeenCalled();
       // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
@@ -123,10 +116,10 @@ describe('KeyboardListener', () => {
 
     it('should send "tabSwitched" message when tab is activated', async () => {
       // Arrange
-      mockTabsQuery.mockResolvedValue([]);
+      mockTabsQuery.mockResolvedValue([]); 
       await KeyboardListener();
       const onActivatedListener = getTabListener(mockOnActivatedAddListener);
-
+      
       // Act: trigger onActivated listener
       await onActivatedListener({ tabId: 301, windowId: 1 });
 
@@ -139,7 +132,7 @@ describe('KeyboardListener', () => {
       mockTabsQuery.mockResolvedValue([]);
       await KeyboardListener();
       const onUpdatedListener = getTabListener(mockOnUpdatedAddListener);
-
+      
       // Act: trigger onUpdated listener
       await onUpdatedListener(
         302, // tabId
@@ -155,29 +148,29 @@ describe('KeyboardListener', () => {
     it('should NOT send message if tab update status is not complete', async () => {
       // Arrange
       mockTabsQuery.mockResolvedValue([]);
-      await KeyboardListener();
+      await KeyboardListener(); 
       const onUpdatedListener = getTabListener(mockOnUpdatedAddListener);
 
       await onUpdatedListener(
-        303,
-        { status: 'loading' },
+        303, 
+        { status: 'loading' }, 
         { id: 303, active: true }
       );
 
       // Assert
       expect(mockSendMessage).not.toHaveBeenCalled();
     });
-
+    
     it('should NOT send message if tab update is complete but not active', async () => {
       // Arrange
       mockTabsQuery.mockResolvedValue([]);
-      await KeyboardListener();
+      await KeyboardListener(); 
       const onUpdatedListener = getTabListener(mockOnUpdatedAddListener);
-
+      
       // Act: Complete, but not active
       await onUpdatedListener(
-        304,
-        { status: 'complete' },
+        304, 
+        { status: 'complete' }, 
         { id: 304, active: false }
       );
 
@@ -188,19 +181,12 @@ describe('KeyboardListener', () => {
     it('should handle sendMessage failure gracefully', async () => {
       // Arrange
       mockTabsQuery.mockResolvedValue([]);
-<<<<<<< HEAD
       mockSendMessage.mockRejectedValue(new Error('Send failed'));
       const mockConsoleError = vi.spyOn(console, 'log').mockImplementation(() => {});
-=======
-      mockSendMessage.mockRejectedValue(new Error('Send failed')); // sendMessage başarısız oluyor
-      const mockConsoleError = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
->>>>>>> 5d1558604aa14e98ac08432961f2891aacd6c751
 
       await KeyboardListener();
       const onActivatedListener = getTabListener(mockOnActivatedAddListener);
-
+      
       // Act
       await onActivatedListener({ tabId: 401, windowId: 1 });
 
@@ -209,7 +195,7 @@ describe('KeyboardListener', () => {
         'Failed to send message to side panel:',
         expect.any(Error)
       );
-
+      
       mockConsoleError.mockRestore();
     });
   });
