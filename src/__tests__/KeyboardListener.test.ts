@@ -77,7 +77,7 @@ describe('KeyboardListener', () => {
       const error = new Error('Scripting failed');
       mockTabsQuery.mockResolvedValue([{ id: 201, url: 'https://error.com/' }]);
       mockExecuteScript.mockRejectedValue(error); // ExecuteScript error
-      const mockConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const mockConsoleError = vi.spyOn(console, 'log').mockImplementation(() => {});
 
       // Act
       await KeyboardListener();
@@ -96,9 +96,7 @@ describe('KeyboardListener', () => {
 
   describe('Tab listeners', () => {
     
-    // Yardımcı fonksiyon: Dinleyiciyi döndür
     const getTabListener = (mockListener: Mock) => {
-      // Dinleyici kaydedildiğini varsayarak ilk argümanı döndür
       expect(mockListener).toHaveBeenCalled();
       // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       return mockListener.mock.calls[0][0] as Function;
@@ -183,8 +181,8 @@ describe('KeyboardListener', () => {
     it('should handle sendMessage failure gracefully', async () => {
       // Arrange
       mockTabsQuery.mockResolvedValue([]);
-      mockSendMessage.mockRejectedValue(new Error('Send failed')); // sendMessage başarısız oluyor
-      const mockConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      mockSendMessage.mockRejectedValue(new Error('Send failed'));
+      const mockConsoleError = vi.spyOn(console, 'log').mockImplementation(() => {});
 
       await KeyboardListener();
       const onActivatedListener = getTabListener(mockOnActivatedAddListener);

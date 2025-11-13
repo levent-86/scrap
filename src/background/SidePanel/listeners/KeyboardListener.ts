@@ -17,7 +17,7 @@ export const KeyboardListener = async () => {
         });
         console.log(`Injected content.js into Tab ID: ${tab.id}`);
       } catch (e) {
-        console.error(`Failed to inject into Tab ID: ${tab.id}:`, e);
+        console.log(`Failed to inject into Tab ID: ${tab.id}:`, e);
       }
     }
   }
@@ -30,7 +30,7 @@ export const KeyboardListener = async () => {
         action: 'tabSwitched',
       })
       .catch((e) => {
-        console.error('Failed to send message to side panel:', e);
+        console.log('Failed to send message to side panel:', e);
       });
   }
 

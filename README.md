@@ -27,8 +27,8 @@
   Click the link below to install it instantly and start scraping data.
   <br />
   <br />
-  <a href="" target="_blank">
-    <img src="https://img.shields.io/badge/Chrome%20Web%20Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Download on Chrome Web Store">
+  <a href="https://chromewebstore.google.com/detail/njdhnogadpoafagjibjcopbngknjiikl?utm_source=item-share-cb" target="_blank">
+    <img src=".media/chrome-btn.png" width="170" alt="Download on Chrome Web Store">
   </a>
 </p>
 
