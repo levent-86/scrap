@@ -39,10 +39,31 @@ export const KeyboardListener = async () => {
     notifyTabChange();
   });
 
+  const prevUrls: Record<number, string | null> = {};
+  let prevHost: string | null = null;
+  let currHost: string | null = null;
+
   //Triggers when tab updated
-  chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete' && tab.active) {
-      notifyTabChange();
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    //   set previous and current URLS while loading
+    if (changeInfo.status === 'loading' && tab.url) {
+      const previous = prevUrls[tabId] || null;
+      const current = tab.url;
+      if (previous) {
+        prevHost = new URL(previous).hostname;
+      } else {
+        prevHost = null;
+      }
+      currHost = new URL(String(current)).hostname;
+
+      // Current now becomes previous for next update
+      prevUrls[tabId] = current;
+
+      // Take action when complete
+    } else if (changeInfo.status === 'complete' && tab.active) {
+      if (prevHost !== currHost) {
+        notifyTabChange();
+      }
     }
   });
 };

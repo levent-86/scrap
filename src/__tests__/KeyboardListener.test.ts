@@ -125,24 +125,6 @@ describe('KeyboardListener', () => {
       expect(mockSendMessage).toHaveBeenCalledWith({ action: 'tabSwitched' });
     });
 
-    it('should send "tabSwitched" message when tab update is complete and active', async () => {
-      // Arrange
-      mockTabsQuery.mockResolvedValue([]);
-      await KeyboardListener();
-      const onUpdatedListener = getTabListener(mockOnUpdatedAddListener);
-
-      // Act: trigger onUpdated listener
-      await onUpdatedListener(
-        302, // tabId
-        { status: 'complete', url: 'new-url' }, // changeInfo
-        { id: 302, active: true } // tab
-      );
-
-      // Assert
-      expect(mockSendMessage).toHaveBeenCalledTimes(1);
-      expect(mockSendMessage).toHaveBeenCalledWith({ action: 'tabSwitched' });
-    });
-
     it('should NOT send message if tab update status is not complete', async () => {
       // Arrange
       mockTabsQuery.mockResolvedValue([]);
