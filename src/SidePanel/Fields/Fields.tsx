@@ -121,7 +121,16 @@ export const Fields = () => {
   const handleSave = () => {
     if (!headers || Object.keys(text).length <= 1) return;
 
-    const newRecord: Data = text as Data;
+    //   Trim spaces at first
+    type TextValue = string | number | boolean | null;
+    const trimmedText: { [key: string]: TextValue } = {};
+
+    for (const key in text) {
+      const value = text[key];
+      trimmedText[key] = typeof value === 'string' ? value.trim() : value;
+    }
+
+    const newRecord: Data = trimmedText as Data;
     const updatedData = [...storedData, newRecord];
 
     chrome.storage.local.set({ [DATA]: updatedData }, async () => {

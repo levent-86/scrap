@@ -8,7 +8,7 @@ The "Pick Icon" visible on the Chrome toolbar was custom-designed for this proje
 
 - **Designer:** Mustafa Levent Fidancı
 - **Concept:** A simplified, modern representation of data selection and collection.
-- **License:** The icon's source SVG is included and licensed under the **MIT License**, ensuring it remains free to use, modify, and distribute along with the code. You can find the source in the `public/` directory.
+- **License:** The icon's source SVG is included and licensed under the **MIT License**. You can find the source in the `public/` directory.
 
 ## Legal Disclaimer & Licensing
 
@@ -33,7 +33,7 @@ If you're looking to run the extension locally or contribute code, here's how to
 
 **NeuraLetter Suite: Scrap** is a modern Google Chrome Extension built using the following technologies:
 
-- **Frontend/Logic:** JavaScript (ES6+), HTML5, CSS3
+- **Frontend/Logic:** TypeScript, HTML5, CSS3
 - **Framework/Libraries:** React.js
 - **UI Tool:** Daisy UI
 - **Build Tool:** Vite
