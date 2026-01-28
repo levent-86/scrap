@@ -10,7 +10,7 @@
   <em>Manually collect data from websites. Set your CSV headers, copy info using the side panel, and export your organized list.</em>
   <br />
   <br />
-  <a href="https://neuraletter.com">Visit Homepage</a>
+  <a href="https://levent-86.github.io/neuraletter/">Visit Homepage</a>
   ·
   <a href="https://github.com/levent-86/scrap/issues">Problem Report</a>
   ·
@@ -80,7 +80,7 @@
     </ul>
   </li>
 </ul>
-<p align="center"><a href="https://neuraletter.com">Visit us</a> for more information.</p>
+<p align="center"><a href="https://levent-86.github.io/neuraletter/">Visit us</a> for more information.</p>
 
 ---
 
