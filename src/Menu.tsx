@@ -13,7 +13,7 @@ export const Menu = () => {
       <ul className="menu menu-horizontal bg-base-200 rounded-box justify-between w-full mb-3">
         <li>
           <a
-            href="https://neuraletter.com"
+            href="https://levent-86.github.io/neuraletter/"
             className="tooltip tooltip-bottom"
             data-tip="Visit Us"
             target="_blank"
